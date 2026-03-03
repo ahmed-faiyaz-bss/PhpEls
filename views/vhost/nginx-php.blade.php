@@ -1,8 +1,8 @@
 #[php]
 @php
-    $phpSocket = "unix:/run/alt-php{{ $version }}-fpm/php-fpm.sock";
+    $phpSocket = "unix:/run/alt-php{$version}-fpm/php-fpm.sock";
     if ($site->isIsolated()) {
-        $phpSocket = "unix:/run/alt-php{{ $version }}-fpm/php-fpm-{$site->user}.sock";
+        $phpSocket = "unix:/run/alt-php{$version}-fpm/php-fpm-{$site->user}.sock";
     }
 @endphp
 location / {

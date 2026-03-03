@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Vito\Plugins\Tuxcare\PhpEls;
+namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls;
 
 use App\Exceptions\SSHCommandError;
 use App\Services\AbstractService;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls;
+namespace App\Vito\Plugins\Tuxcare\PhpEls;
 
 use App\Exceptions\SSHCommandError;
 use App\Services\AbstractService;
@@ -44,7 +44,7 @@ class PhpEls extends AbstractService
         $server->ssh()->exec(
             view('php-els::ssh.install-els', [
                 'version' => $this->versionNumber(),
-                 'user' => $server->getSshUser(),
+                'user' => $server->getSshUser(),
             ]),
             'install-php-els-'.$this->service->version
         );

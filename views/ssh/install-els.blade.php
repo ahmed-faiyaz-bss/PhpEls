@@ -2,10 +2,31 @@ if ! sudo DEBIAN_FRONTEND=noninteractive apt-get install -y alt-php{{ $version }
     echo 'VITO_SSH_ERROR' && exit 1
 fi
 
-if [ -f /opt/alt/php{{ $version }}/etc/php-fpm.d/www.conf ]; then
-    sudo sed -i 's/apache/{{ $user }}/g' /opt/alt/php{{ $version }}/etc/php-fpm.d/www.conf
-    sudo sed -i 's/nobody/{{ $user }}/g' /opt/alt/php{{ $version }}/etc/php-fpm.d/www.conf
+# Create FPM pool config if none exists
+POOL_DIR="/opt/alt/php{{ $version }}/etc/php-fpm.d"
+if [ -z "$(ls -A $POOL_DIR/*.conf 2>/dev/null)" ]; then
+    sudo mkdir -p "$POOL_DIR"
+    sudo bash -c "cat > $POOL_DIR/www.conf" <<'POOLEOF'
+[www]
+user = {{ $user }}
+group = {{ $user }}
+
+listen = /run/alt-php{{ $version }}-fpm/php-fpm.sock
+listen.owner = {{ $user }}
+listen.group = {{ $user }}
+listen.mode = 0660
+
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3
+pm.max_requests = 500
+POOLEOF
 fi
+
+# Ensure socket directory exists
+sudo mkdir -p /run/alt-php{{ $version }}-fpm
 
 sudo systemctl enable alt-php{{ $version }}-fpm
 sudo systemctl start alt-php{{ $version }}-fpm

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls;
+namespace App\Vito\Plugins\Tuxcare\PhpEls;
 
 use App\Plugins\AbstractPlugin;
 use App\Plugins\RegisterServerFeature;

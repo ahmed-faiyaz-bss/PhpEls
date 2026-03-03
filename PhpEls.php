@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls;
+namespace App\Vito\Plugins\Tuxcare\PhpEls;
 
+use App\Exceptions\SSHCommandError;
 use App\Services\AbstractService;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class PhpEls extends AbstractService
@@ -19,16 +21,12 @@ class PhpEls extends AbstractService
 
     public function unit(): string
     {
-        return '';
+        return 'alt-php'.$this->versionNumber().'-fpm';
     }
 
     public function creationRules(array $input): array
     {
         return [
-            'license_key' => [
-                'required',
-                'string',
-            ],
             'version' => [
                 'required',
                 Rule::in(config('service.services.php-els.versions')),
@@ -39,22 +37,13 @@ class PhpEls extends AbstractService
         ];
     }
 
-    public function creationData(array $input): array
-    {
-        return [
-            'license_key' => $input['license_key'],
-        ];
-    }
-
     public function install(): void
     {
         $server = $this->service->server;
-        $version = str_replace('.', '', $this->service->version);
 
         $server->ssh()->exec(
             view('php-els::ssh.install-els', [
-                'licenseKey' => $this->service->type_data['license_key'],
-                'version' => $version,
+                'version' => $this->versionNumber(),
             ]),
             'install-php-els-'.$this->service->version
         );
@@ -65,11 +54,10 @@ class PhpEls extends AbstractService
     public function uninstall(): void
     {
         $server = $this->service->server;
-        $version = str_replace('.', '', $this->service->version);
 
         $server->ssh()->exec(
             view('php-els::ssh.uninstall-els', [
-                'version' => $version,
+                'version' => $this->versionNumber(),
             ]),
             'uninstall-php-els-'.$this->service->version
         );
@@ -77,9 +65,34 @@ class PhpEls extends AbstractService
         $server->os()->cleanup();
     }
 
+    /**
+     * @throws SSHCommandError
+     */
+    public function installExtension(string $name): void
+    {
+        $version = $this->versionNumber();
+
+        $result = $this->service->server->ssh()->exec(
+            view('php-els::ssh.install-extension', [
+                'version' => $version,
+                'name' => $name,
+            ]),
+            'install-php-els-extension-'.$name
+        );
+
+        $pos = strpos($result, '[PHP Modules]');
+        if ($pos === false) {
+            throw new SSHCommandError('Failed to install extension');
+        }
+        $result = Str::substr($result, $pos);
+        if (! Str::contains($result, $name)) {
+            throw new SSHCommandError('Failed to install extension');
+        }
+    }
+
     public function version(): string
     {
-        $version = str_replace('.', '', $this->service->version);
+        $version = $this->versionNumber();
 
         $result = $this->service->server->ssh()->exec(
             '/opt/alt/php'.$version.'/usr/bin/php -r \'echo PHP_VERSION;\' 2>/dev/null'
@@ -90,5 +103,13 @@ class PhpEls extends AbstractService
         }
 
         return $this->service->version;
+    }
+
+    /**
+     * Get the version number without dots (e.g., "7.3" → "73").
+     */
+    public function versionNumber(): string
+    {
+        return str_replace('.', '', $this->service->version);
     }
 }

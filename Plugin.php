@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls;
+namespace App\Vito\Plugins\Tuxcare\PhpEls;
 
-use App\DTOs\DynamicField;
-use App\DTOs\DynamicForm;
 use App\Plugins\AbstractPlugin;
+use App\Plugins\RegisterServerFeature;
+use App\Plugins\RegisterServerFeatureAction;
 use App\Plugins\RegisterServiceType;
 use App\Plugins\RegisterViews;
+use App\Vito\Plugins\Tuxcare\PhpEls\Actions\InstallExtension;
+use App\Vito\Plugins\Tuxcare\PhpEls\Actions\SetupRepository;
 
 class Plugin extends AbstractPlugin
 {
@@ -36,18 +38,21 @@ class Plugin extends AbstractPlugin
                 '7.0',
                 '5.6',
             ])
-            ->form(DynamicForm::make([
-                DynamicField::make('alert')
-                    ->alert()
-                    ->options(['type' => 'info'])
-                    ->link('TuxCare PHP ELS Docs', 'https://docs.tuxcare.com/els-for-runtimes/php/')
-                    ->description('You need a valid TuxCare license key to install PHP ELS.'),
-                DynamicField::make('license_key')
-                    ->text()
-                    ->label('License Key')
-                    ->placeholder('XXX-XXXXXXXXXXXX')
-                    ->description('Your TuxCare PHP ELS license key'),
-            ]))
+            ->register();
+
+        RegisterServerFeature::make('php-els')
+            ->label('PHP ELS')
+            ->description('TuxCare Extended Lifecycle Support for PHP')
+            ->register();
+
+        RegisterServerFeatureAction::make('php-els', 'setup-repo')
+            ->label('Setup Repository')
+            ->handler(SetupRepository::class)
+            ->register();
+
+        RegisterServerFeatureAction::make('php-els', 'install-extension')
+            ->label('Install Extension')
+            ->handler(InstallExtension::class)
             ->register();
     }
 }

@@ -44,6 +44,7 @@ class PhpEls extends AbstractService
         $server->ssh()->exec(
             view('php-els::ssh.install-els', [
                 'version' => $this->versionNumber(),
+                 'user' => $server->getSshUser(),
             ]),
             'install-php-els-'.$this->service->version
         );

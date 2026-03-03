@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls;
+namespace App\Vito\Plugins\Tuxcare\PhpEls;
 
 use App\Exceptions\SSHCommandError;
 use App\Services\AbstractService;
@@ -104,6 +104,34 @@ class PhpEls extends AbstractService
         }
 
         return $this->service->version;
+    }
+
+    public function createFpmPool(string $user, string $version): void
+    {
+        $versionNumber = str_replace('.', '', $version);
+
+        $this->service->server->ssh()->write(
+            "/opt/alt/php{$versionNumber}/etc/php-fpm.d/{$user}.conf",
+            view('php-els::ssh.fpm-pool-isolated', [
+                'user' => $user,
+                'version' => $versionNumber,
+            ]),
+            'root'
+        );
+
+        $this->service->server->systemd()->restart($this->unit());
+    }
+
+    public function removeFpmPool(string $user, string $version, ?int $siteId): void
+    {
+        $versionNumber = str_replace('.', '', $version);
+
+        $this->service->server->ssh()->exec(
+            "sudo rm -f /opt/alt/php{$versionNumber}/etc/php-fpm.d/{$user}.conf",
+            'remove-php-els-fpm-pool'
+        );
+
+        $this->service->server->systemd()->restart($this->unit());
     }
 
     /**

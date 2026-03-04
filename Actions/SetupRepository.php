@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls\Actions;
+namespace App\Vito\Plugins\Tuxcare\PhpEls\Actions;
 
 use App\DTOs\DynamicField;
 use App\DTOs\DynamicForm;

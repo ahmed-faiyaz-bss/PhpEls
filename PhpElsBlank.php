@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls;
+namespace App\Vito\Plugins\Tuxcare\PhpEls;
 
 use App\Exceptions\SSHError;
 use App\Models\Service;
@@ -28,7 +28,7 @@ class PhpElsBlank extends AbstractSiteType
 
     public function language(): string
     {
-        return 'php';
+        return 'php-els';
     }
 
     public function requiredServices(): array

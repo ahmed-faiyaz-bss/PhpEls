@@ -10,8 +10,8 @@ use App\Plugins\RegisterServerFeatureAction;
 use App\Plugins\RegisterServiceType;
 use App\Plugins\RegisterSiteType;
 use App\Plugins\RegisterViews;
-use App\Vito\Plugins\Tuxcare\PhpEls\Actions\InstallExtension;
-use App\Vito\Plugins\Tuxcare\PhpEls\Actions\SetupRepository;
+use App\Vito\Plugins\Tuxcare\AhmedFaiyazBss\Actions\InstallExtension;
+use App\Vito\Plugins\Tuxcare\AhmedFaiyazBss\Actions\SetupRepository;
 
 class Plugin extends AbstractPlugin
 {

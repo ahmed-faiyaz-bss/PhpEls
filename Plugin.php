@@ -10,8 +10,8 @@ use App\Plugins\RegisterServerFeatureAction;
 use App\Plugins\RegisterServiceType;
 use App\Plugins\RegisterSiteType;
 use App\Plugins\RegisterViews;
-use App\Vito\Plugins\AhmedFaiyazBss\Actions\InstallExtension;
-use App\Vito\Plugins\AhmedFaiyazBss\Actions\SetupRepository;
+use App\Vito\Plugins\AhmedFaiyazBss\PhpEls\Actions\InstallExtension;
+use App\Vito\Plugins\AhmedFaiyazBss\PhpEls\Actions\SetupRepository;
 
 class Plugin extends AbstractPlugin
 {
@@ -91,6 +91,10 @@ class Plugin extends AbstractPlugin
                     ->description('Your TuxCare PHP ELS license key'),
             ]))
             ->register();
+
+        // Set active flags directly so buttons are enabled even if handler
+        // classes can't be autoloaded (namespace/path mismatch from GitHub install)
+        config(['server.features.php-els.actions.setup-repo.active' => true]);
 
         RegisterServerFeatureAction::make('php-els', 'install-extension')
             ->label('Install Extension')

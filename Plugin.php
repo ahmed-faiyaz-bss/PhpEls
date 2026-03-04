@@ -79,11 +79,45 @@ class Plugin extends AbstractPlugin
         RegisterServerFeatureAction::make('php-els', 'setup-repo')
             ->label('Setup Repository')
             ->handler(SetupRepository::class)
+            ->form(DynamicForm::make([
+                DynamicField::make('alert')
+                    ->alert()
+                    ->link('TuxCare PHP ELS Docs', 'https://docs.tuxcare.com/els-for-runtimes/php/')
+                    ->description('Enter your TuxCare license key to set up the PHP ELS repository. If the repository is already set up, this will re-run the setup.'),
+                DynamicField::make('license_key')
+                    ->text()
+                    ->label('License Key')
+                    ->placeholder('XXX-XXXXXXXXXXXX')
+                    ->description('Your TuxCare PHP ELS license key'),
+            ]))
             ->register();
 
         RegisterServerFeatureAction::make('php-els', 'install-extension')
             ->label('Install Extension')
             ->handler(InstallExtension::class)
+            ->form(DynamicForm::make([
+                DynamicField::make('version')
+                    ->select()
+                    ->label('PHP ELS Version')
+                    ->options([
+                        '8.3',
+                        '8.2',
+                        '8.1',
+                        '8.0',
+                        '7.4',
+                        '7.3',
+                        '7.2',
+                        '7.1',
+                        '7.0',
+                        '5.6',
+                    ])
+                    ->description('Select the PHP ELS version to install the extension for'),
+                DynamicField::make('extension')
+                    ->text()
+                    ->label('Extension Name')
+                    ->placeholder('e.g. mysqlnd, xml, gd')
+                    ->description('The extension package name (without the alt-phpXY- prefix)'),
+            ]))
             ->register();
     }
 }

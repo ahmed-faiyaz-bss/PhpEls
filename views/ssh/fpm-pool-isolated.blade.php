@@ -3,8 +3,8 @@ user = {{ $user }}
 group = {{ $user }}
 
 listen = /run/alt-php{{ $version }}-fpm/php-fpm-{{ $user }}.sock
-listen.owner = {{ $user }}
-listen.group = {{ $user }}
+listen.owner = vito
+listen.group = vito
 listen.mode = 0660
 
 pm = dynamic

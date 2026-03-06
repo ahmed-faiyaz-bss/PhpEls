@@ -110,6 +110,11 @@ class PhpEls extends AbstractService
     {
         $versionNumber = str_replace('.', '', $version);
 
+        $this->service->server->ssh()->exec(
+            "sudo mkdir -p /run/alt-php{$versionNumber}-fpm",
+            'create-php-els-fpm-socket-dir'
+        );
+
         $this->service->server->ssh()->write(
             "/opt/alt/php{$versionNumber}/etc/php-fpm.d/{$user}.conf",
             view('php-els::ssh.fpm-pool-isolated', [

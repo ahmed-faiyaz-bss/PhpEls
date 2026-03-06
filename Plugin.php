@@ -4,6 +4,7 @@ namespace App\Vito\Plugins\AhmedFaiyazBss\PhpEls;
 
 use App\DTOs\DynamicField;
 use App\DTOs\DynamicForm;
+use App\Models\Site;
 use App\Plugins\AbstractPlugin;
 use App\Plugins\RegisterServerFeature;
 use App\Plugins\RegisterServerFeatureAction;
@@ -95,6 +96,16 @@ class Plugin extends AbstractPlugin
         // Set active flags directly so buttons are enabled even if handler
         // classes can't be autoloaded (namespace/path mismatch from GitHub install)
         config(['server.features.php-els.actions.setup-repo.active' => true]);
+
+        // Clean up FPM pool config when a php-els site is deleted
+        Site::deleting(function (Site $site): void {
+            if ($site->isIsolated() && $site->type()->language() === 'php-els' && $site->php_version) {
+                $phpElsService = $site->server->service('php-els', $site->php_version);
+                if ($phpElsService) {
+                    $phpElsService->handler()->removeFpmPool($site->user, $site->php_version, $site->id);
+                }
+            }
+        });
 
         RegisterServerFeatureAction::make('php-els', 'install-extension')
             ->label('Install Extension')

@@ -64,7 +64,7 @@ Once the repository is set up, install PHP ELS as a service:
 1. Navigate to **Servers > {Your Server} > Services**
 2. Select **PHP ELS** as the service type
 3. Choose the desired version (e.g. `7.4`)
-4. Click install — this installs the `alt-phpXY` package, creates a default FPM pool, and starts the `alt-phpXY-fpm` service
+4. Click install — this installs the `alt-phpXY` package along with MySQL extensions (`alt-phpXY-mysql80`, `alt-phpXY-mysqlnd`), enables MySQL modules (`mysqlnd`, `mysqli`, `pdo_mysql`), creates a default FPM pool, and starts the `alt-phpXY-fpm` service
 
 ### 3. Install PHP Extensions
 

@@ -3,7 +3,7 @@ if ! sudo DEBIAN_FRONTEND=noninteractive apt-get install -y alt-php{{ $version }
 fi
 
 # Install MySQL extensions
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y alt-php{{ $version }}-mysql80 alt-php{{ $version }}-mysqlnd
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y alt-php{{ $version }}-mysql80 alt-php{{ $version }}-mysqlnd alt-php{{ $version }}-mbstring
 
 # Enable all available modules
 PHP_ETC="/opt/alt/php{{ $version }}/etc"

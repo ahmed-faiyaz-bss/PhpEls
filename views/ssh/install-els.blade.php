@@ -5,16 +5,10 @@ fi
 # Install MySQL extensions
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y alt-php{{ $version }}-mysql80 alt-php{{ $version }}-mysqlnd
 
-# Enable MySQL modules
+# Enable all available modules
 PHP_ETC="/opt/alt/php{{ $version }}/etc"
-if [ -f "$PHP_ETC/php.d.all/mysqlnd.ini" ]; then
-    sudo cp "$PHP_ETC/php.d.all/mysqlnd.ini" "$PHP_ETC/php.d/mysqlnd.ini"
-fi
-if [ -f "$PHP_ETC/php.d.all/mysqli.ini" ]; then
-    sudo cp "$PHP_ETC/php.d.all/mysqli.ini" "$PHP_ETC/php.d/mysqli.ini"
-fi
-if [ -f "$PHP_ETC/php.d.all/pdo_mysql.ini" ]; then
-    sudo cp "$PHP_ETC/php.d.all/pdo_mysql.ini" "$PHP_ETC/php.d/pdo_mysql.ini"
+if [ -d "$PHP_ETC/php.d.all" ]; then
+    sudo cp "$PHP_ETC/php.d.all/"*.ini "$PHP_ETC/php.d/" 2>/dev/null
 fi
 
 # Create FPM pool config if none exists

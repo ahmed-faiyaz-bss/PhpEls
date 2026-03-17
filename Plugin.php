@@ -9,10 +9,13 @@ use App\Plugins\AbstractPlugin;
 use App\Plugins\RegisterServerFeature;
 use App\Plugins\RegisterServerFeatureAction;
 use App\Plugins\RegisterServiceType;
+use App\Plugins\RegisterSiteFeature;
+use App\Plugins\RegisterSiteFeatureAction;
 use App\Plugins\RegisterSiteType;
 use App\Plugins\RegisterViews;
 use App\Vito\Plugins\AhmedFaiyazBss\PhpEls\Actions\InstallExtension;
 use App\Vito\Plugins\AhmedFaiyazBss\PhpEls\Actions\SetupRepository;
+use App\Vito\Plugins\AhmedFaiyazBss\PhpEls\Actions\UpdateElsPhpVersion;
 
 class Plugin extends AbstractPlugin
 {
@@ -91,6 +94,16 @@ class Plugin extends AbstractPlugin
                     ->placeholder('XXX-XXXXXXXXXXXX')
                     ->description('Your TuxCare PHP ELS license key'),
             ]))
+            ->register();
+
+        RegisterSiteFeature::make('php-els-blank', 'php-els-version')
+            ->label('PHP ELS Version')
+            ->description('Change the PHP ELS version used by this site')
+            ->register();
+
+        RegisterSiteFeatureAction::make('php-els-blank', 'php-els-version', 'update')
+            ->label('Update')
+            ->handler(UpdateElsPhpVersion::class)
             ->register();
 
         // Set active flags directly so buttons are enabled even if handler
